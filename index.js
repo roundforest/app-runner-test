@@ -19,7 +19,7 @@ fastify.get('/health', async (request, reply) => {
  */
 const start = async () => {
   try {
-    const runPort = +process.env.PORT || 3030
+    const runPort = 8080
     const app = await fastify.listen({ port: runPort })
     console.log(`server is running!, app: ${app} on port: ${runPort}`)
   } catch (err) {
