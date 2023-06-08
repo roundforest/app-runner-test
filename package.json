@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "dependencies": {
     "fastify": "^4.17.0",
     "fastly": "^4.1.1"

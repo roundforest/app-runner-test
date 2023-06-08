@@ -1,5 +1,5 @@
-// ESM
-import Fastify from 'fastify'
+const Fastify = require('fastify')
+
 const fastify = Fastify({
   logger: true
 })
@@ -7,11 +7,6 @@ const fastify = Fastify({
 // Run the server!
 fastify.get('/', async (request, reply) => {
     return { hello: 'world' }
-})
-
-// Run the server!
-fastify.get('/health', async (request, reply) => {
-  return {statusCode: 200, message: 'Healthy!'}
 })
   
 /**
