@@ -1,25 +1,11 @@
-const Fastify = require('fastify')
+const express = require('express')
+const app = express()
+const port = 8080
 
-const fastify = Fastify({
-  logger: true
+app.get('/', (req, res) => {
+  res.send('Hello World!')
 })
 
-// Run the server!
-fastify.get('/', async (request, reply) => {
-    return { hello: 'world' }
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
 })
-  
-/**
- * Run the server!
- */
-const start = async () => {
-  try {
-    const runPort = 8080
-    const app = await fastify.listen({ port: runPort })
-    console.log(`server is running!, app: ${app} on port: ${runPort}`)
-  } catch (err) {
-    fastify.log.error(err)
-    process.exit(1)
-  }
-}
-start()  
