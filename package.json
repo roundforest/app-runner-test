@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "express": "^4.18.2",
     "fastify": "^4.17.0",
     "fastly": "^4.1.1"
   },
