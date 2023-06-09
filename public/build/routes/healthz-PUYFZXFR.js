@@ -1,0 +1,1 @@
+import{c as r,d as t,e as d,f as o,g as e,h as f,j as u}from"/build/_shared/chunk-5XCBIPQZ.js";t();d();o();f();e();t();d();o();f();e();var a=r(u());function l(){return(0,a.jsx)("div",{children:"Healthz"})}export{l as default};
