@@ -3,8 +3,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
-    "start": "remix-serve build",
-    "setup": "npm i && npm run build",
+    "start": "npm run build && remix-serve build",
     "typecheck": "tsc"
   },
   "dependencies": {
