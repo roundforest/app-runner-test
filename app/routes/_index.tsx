@@ -12,7 +12,7 @@ export default function Index() {
     <div
       style={{
         fontFamily: "system-ui, sans-serif",
-        fontSize: "40px",
+        fontSize: "10px",
         lineHeight: "1.8",
         backgroundColor: "grey",
         display: "flex",
@@ -21,7 +21,7 @@ export default function Index() {
         height: "100vh",
       }}
     >
-      <h1>HELLO GALOS</h1>
+      <h1>HELLO FROM REMIX APP</h1>
     </div>
   );
 }
