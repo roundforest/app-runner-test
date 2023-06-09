@@ -1,1 +1,0 @@
-import{c as d,d as o,e as r,f as t,g as e,h as n,j as i}from"/build/_shared/chunk-5XCBIPQZ.js";o();r();t();n();e();o();r();t();n();e();var p=d(i());var s=()=>(0,p.jsx)("div",{children:"Main"}),l=s;export{l as default};
