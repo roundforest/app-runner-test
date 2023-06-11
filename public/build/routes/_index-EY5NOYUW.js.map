@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["browser-route-module:routes/_index.tsx?browser", "../../../app/routes/_index.tsx"],
-  "sourcesContent": ["export { default, meta } from \"./routes/_index.tsx\";", "import type { V2_MetaFunction } from \"@remix-run/node\";\n\nexport const meta: V2_MetaFunction = () => {\n  return [\n    { title: \"New Remix App\" },\n    { name: \"description\", content: \"Welcome to Remix!\" },\n  ];\n};\n\nexport default function Index() {\n  return (\n    <div\n      style={{\n        fontFamily: \"system-ui, sans-serif\",\n        fontSize: \"10px\",\n        lineHeight: \"1.8\",\n        backgroundColor: \"grey\",\n        display: \"flex\",\n        justifyContent: \"center\",\n        paddingTop: \"50px\",\n        height: \"100vh\",\n      }}\n    >\n      <h1>HELLO FROM REMIX APP</h1>\n    </div>\n  );\n}\n"],
-  "mappings": ";;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;;;ACAA;AAAA;AAAA;AAAA;AAAA;AAuBM;AArBC,IAAM,OAAwB,MAAM;AACzC,SAAO;AAAA,IACL,EAAE,OAAO,gBAAgB;AAAA,IACzB,EAAE,MAAM,eAAe,SAAS,oBAAoB;AAAA,EACtD;AACF;AAEe,SAAR,QAAyB;AAC9B,SACE;AAAA,IAAC;AAAA;AAAA,MACC,OAAO;AAAA,QACL,YAAY;AAAA,QACZ,UAAU;AAAA,QACV,YAAY;AAAA,QACZ,iBAAiB;AAAA,QACjB,SAAS;AAAA,QACT,gBAAgB;AAAA,QAChB,YAAY;AAAA,QACZ,QAAQ;AAAA,MACV;AAAA,MAEA,6DAAC,QAAG,oCAAJ;AAAA;AAAA;AAAA;AAAA,aAAwB;AAAA;AAAA,IAZ1B;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,EAaA;AAEJ;",
-  "names": []
-}

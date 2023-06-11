@@ -1,27 +1,16 @@
-import type { V2_MetaFunction } from "@remix-run/node";
+import React from 'react'
 
-export const meta: V2_MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
-};
-
-export default function Index() {
+const Main = () => {
   return (
-    <div
-      style={{
-        fontFamily: "system-ui, sans-serif",
-        fontSize: "10px",
-        lineHeight: "1.8",
-        backgroundColor: "grey",
-        display: "flex",
-        justifyContent: "center",
-        paddingTop: "50px",
-        height: "100vh",
-      }}
-    >
-      <h1>HELLO FROM REMIX APP!</h1>
+    <div>
+      <input
+        type="range"
+        className="pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto"
+      />
     </div>
-  );
+  ) // Just for redirect
 }
+
+export default Main
+
+//[&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/25 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-[50px] [&::-webkit-slider-thumb]:w-[50px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-purple-500
