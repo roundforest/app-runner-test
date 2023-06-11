@@ -21,7 +21,7 @@ export default function Index() {
         height: "100vh",
       }}
     >
-      <h1>HELLO FROM REMIX APP</h1>
+      <h1>HELLO FROM REMIX APP!</h1>
     </div>
   );
 }
