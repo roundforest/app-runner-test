@@ -1,6 +1,6 @@
 {
-  "name": "@roundforest/bdt-store-page-remix",
-  "version": "1.0.13",
+  "name": "store-page-remix",
+  "version": "1.1.0",
   "sideEffects": false,
   "scripts": {
     "build": "concurrently -r 'npm:build:*'",
