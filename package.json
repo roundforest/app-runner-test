@@ -1,11 +1,16 @@
 {
-  "name": "store-page-remix",
+  "name": "app-runner-remix",
   "version": "1.1.0",
   "sideEffects": false,
   "scripts": {
     "build": "concurrently -r 'npm:build:*'",
     "build:css": "tailwindcss -i ./styles/app.css -o ./app/styles/app.css -m",
     "build:app": "remix build",
+    "postbuild": "npm run docker -- --load",
+    "postpublish": "concurrently -r 'npm:publish:*'",
+    "publish:docker": "if [[ $(uname -a) =~ 'X86' ]]; then docker push roundforestltd/app-runner-remix:${npm_package_version}; fi",
+    "publish:docker-multiarch": "if [[ $(uname -a) =~ 'ARM64' ]]; then npm run docker -- --platform linux/amd64,linux/arm64 --push; fi",
+    "docker": "docker buildx build -t roundforestltd/app-runner-remix:${npm_package_version} --secret id=npmrc,src=$(npm get userconfig) --build-arg NODE_VERSION=${npm_package_config_docker_node_version} .",
     "setup": "npm i && npm run build",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
     "dev:css": "tailwindcss -i ./styles/app.css -o ./app/styles/app.css -w",
