@@ -1,37 +1,41 @@
-import type {Product} from '@roundforest/bdt-client'
+import type {Product} from '../root'
 
-type Filters =
-  | 'byBrand'
-  | 'byFixedPrice'
-  | 'byDiscounted'
-  | 'byStore'
-  | 'byCondition'
-  | 'byShipping'
+type Filters = 'priceRange' | 'pricing' | 'store' | 'condition' | 'brand' | 'shipping'
 
 type FilterFunc = (products: Product[], filterValues: string[]) => Product[]
 type FiltersType = Record<Filters, string[]>
 type FiltersMapType = Record<Filters, FilterFunc>
 
 const filtersMapType = {
-  byBrand: (products, filterValues) =>
+  priceRange: (products, filterValues) =>
+    filterValues.length
+      ? products.filter((p) => {
+          const [min, max] = filterValues
+          return p.price > Number(min) && p.price < Number(max)
+        })
+      : products,
+  brand: (products, filterValues) =>
     filterValues.length
       ? products.filter((p) => filterValues.includes(p.brandName || ''))
       : products,
 
-  byFixedPrice: (products, filterValues) =>
+  pricing: (products, filterValues) =>
     filterValues.length
-      ? products.filter((p) => !p.auction && filterValues.includes('fixed'))
-      : products,
-  byDiscounted: (products, filterValues) =>
-    filterValues.length
-      ? products.filter((p) => p.discount && filterValues.includes('discounted'))
+      ? products.filter((p) => {
+          if (filterValues.includes('fixed')) {
+            return !p.auction
+          }
+          if (filterValues.includes('discounted')) {
+            return !!p.discount
+          }
+        })
       : products,
 
-  byStore: (products, filterValues) =>
+  store: (products, filterValues) =>
     filterValues.length ? products.filter((p) => filterValues.includes(p.shop)) : products,
-  byCondition: (products, filterValues) =>
+  condition: (products, filterValues) =>
     filterValues.length ? products.filter((p) => filterValues.includes(p.condition)) : products,
-  byShipping: (products, filterValues) =>
+  shipping: (products, filterValues) =>
     filterValues.length
       ? products.filter((p) => filterValues.includes('shipping') && p.freeShipping)
       : products,
