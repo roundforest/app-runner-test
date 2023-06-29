@@ -27,5 +27,32 @@
     [type="radio"]:checked:focus {
       @apply border-[#5e5e5e];
     }
+    
+    [type="range"] {
+      @apply pointer-events-none appearance-none;
+    }
 
+    [type="range"]::-webkit-slider-runnable-track {
+      @apply bg-transparent
+    }
+
+    [type="range"]::-moz-range-track {
+      @apply bg-transparent
+    }
+
+    [type="range"]::-ms-track {
+      @apply bg-transparent
+    }
+
+    [type="range"]::-webkit-slider-thumb {
+      @apply appearance-none cursor-grab pointer-events-auto w-3.5 h-3.5 bg-white rounded-xl border-[#61c200] border-2 border-solid;
+    }
+
+    [type="range"]::-moz-range-thumb {
+      @apply appearance-none cursor-grab pointer-events-auto w-2.5 h-2.5 bg-white rounded-xl border-[#61c200] border-2 border-solid;
+    }
+
+    [type="range"]::-ms-thumb {
+      @apply appearance-none cursor-grab pointer-events-auto w-3.5 h-3.5 bg-white rounded-xl border-[#61c200] border-2 border-solid;
+    }
   }
