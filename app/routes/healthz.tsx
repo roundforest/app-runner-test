@@ -1,5 +1,7 @@
-import {json} from '@remix-run/node'
+import React from 'react'
 
-export const loader = async () => {
-  return json({success: true})
+const Healthz = () => {
+  return <div>Healthz</div>
 }
+
+export default Healthz
