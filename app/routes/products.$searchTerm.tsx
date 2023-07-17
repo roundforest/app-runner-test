@@ -5,62 +5,81 @@ import Appbar from '~/components/appbar'
 import Content from '~/components/content'
 
 import Footer from '~/components/footer'
+import type {DropdownSortBy, LoaderDataProps} from '~/models'
+import {makeId, pageId, sessionId, userId} from '~/utils/cookies.server'
+import {
+  extractFeatureFlagOverridesFromQueryParams,
+  normalizeFeatureFlags,
+} from '~/utils/feature-flags'
 import {mapHostHeaderToLocaleParams} from '~/utils/host-header-locale'
-import type {DropdownSortBy} from '~/utils/products-sort'
-import type {ProductsAndMetadataResponse} from '~/root'
+import {getLdClient} from '~/utils/launch-darkly.server'
 
-export interface FilterByProps {
-  priceRange: string[]
-  pricing: string[]
-  store: string[]
-  condition: string[]
-  brand: string[]
-  shipping: string[]
-}
-export interface LoaderDataProps {
-  data: ProductsAndMetadataResponse
-  locale: string
-  language: string
-  currencyCode: string
-  filterBy: FilterByProps
-  sortBy: DropdownSortBy
-}
+import {getFakeData, getRealData} from '~/utils/products-data.server'
 
 export const loader: LoaderFunction = async ({params, request}) => {
-  const {searchTerm} = params
+  const cookieHeader = request.headers.get('Cookie')
+  const userIdCookie = await userId.parse(cookieHeader)
+  const sessionIdCookie = await sessionId.parse(cookieHeader)
+  const pageIdCookie = await pageId.parse(cookieHeader)
+  const headers = new Headers()
+  if (!userIdCookie) headers.append('Set-Cookie', await userId.serialize(makeId()))
+  if (!sessionIdCookie) headers.append('Set-Cookie', await sessionId.serialize(makeId()))
+  if (!pageIdCookie) headers.append('Set-Cookie', await pageId.serialize(makeId()))
+
   const url = new URL(request.url)
-  const priceRange = url.searchParams.getAll('byPriceRange')
-  const pricing = url.searchParams.getAll('byPricing')
-  const store = url.searchParams.getAll('byStore')
-  const condition = url.searchParams.getAll('byCondition')
-  const brand = url.searchParams.getAll('byBrand')
-  const shipping = url.searchParams.getAll('byShipping')
-  const sortBy = url.searchParams.get('sortBy')
-  const {locale, language, currencyCode} = mapHostHeaderToLocaleParams(request.headers.get('host'))
-  const res = await fetch(`https://www.bestdeals.today/bdt-proxy/${searchTerm}`)
-  const data = await res.json()
-  // const data =
-  //   process.env.NODE_ENV === 'production'
-  //     ? await getData(searchTerm || '')
-  //     : await getFakeData(searchTerm || '')
-  return json({
-    data,
-    locale,
-    language,
-    currencyCode,
-    filterBy: {
-      priceRange,
-      pricing,
-      store,
-      condition,
-      brand,
-      shipping,
+  const {searchParams} = url
+  const {searchTerm} = params
+  const host = request.headers.get('host') || ''
+  const {locale, language, currencyCode} = mapHostHeaderToLocaleParams(host)
+
+  const featureFlagsOverrides = extractFeatureFlagOverridesFromQueryParams(
+    Object.fromEntries(searchParams)
+  )
+  const priceRange = searchParams.getAll('byPriceRange')
+  const pricing = searchParams.getAll('byPricing')
+  const store = searchParams.getAll('byStore')
+  const condition = searchParams.getAll('byCondition')
+  const brand = searchParams.getAll('byBrand')
+  const shipping = searchParams.getAll('byShipping')
+  const sortBy = (searchParams.get('sortBy') ?? 'bestMatch') as DropdownSortBy
+  const data =
+    process.env.NODE_ENV === 'production' ? await getRealData(searchTerm || '') : getFakeData()
+
+  const launchDarkly = await getLdClient()
+  launchDarkly.identify({
+    custom: {
+      domain: host,
     },
-    sortBy,
+    key: userIdCookie,
+    country: locale,
   })
+
+  const featureFlags = await launchDarkly?.allFlagsState({key: userIdCookie})
+
+  const allFlags = normalizeFeatureFlags(featureFlags?.allValues(), featureFlagsOverrides)
+
+  return json<LoaderDataProps>(
+    {
+      data,
+      locale,
+      language,
+      currencyCode,
+      featureFlags: allFlags,
+      filterBy: {
+        priceRange,
+        pricing,
+        store,
+        condition,
+        brand,
+        shipping,
+      },
+      sortBy,
+    },
+    {headers}
+  )
 }
 
-export default function MainRoute() {
+export default function Products() {
   return (
     <main className="flex flex-col">
       <Appbar />

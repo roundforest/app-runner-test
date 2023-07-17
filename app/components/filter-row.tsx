@@ -11,7 +11,7 @@ interface FilterRowProps {
 const FilterRow = ({title, filterBy, isChecked, value, onSubmit}: FilterRowProps) => {
   return (
     <fieldset className="flex flex-row items-center justify-between">
-      <label className="w-full text-sm font-normal capitalize text-[#7b7b7b]">{title}</label>
+      <label className="w-full text-sm font-normal capitalize text-neutral-500">{title}</label>
       <input
         name={filterBy}
         id={value}
@@ -20,7 +20,7 @@ const FilterRow = ({title, filterBy, isChecked, value, onSubmit}: FilterRowProps
         type="checkbox"
         checked={isChecked}
         onChange={onSubmit}
-        aria-label={`${title}-${value}`}
+        aria-label={`filter by ${title} ${value}`}
       />
     </fieldset>
   )

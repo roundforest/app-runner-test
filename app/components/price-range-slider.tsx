@@ -1,6 +1,6 @@
 import {useLoaderData} from '@remix-run/react'
 import React, {useState} from 'react'
-import type {LoaderDataProps} from '~/routes/products.$searchTerm'
+import type { LoaderDataProps } from '~/models'
 import currencyFormatter from '~/utils/currency-formatter'
 
 interface DefaultPriceRangeProp {
@@ -28,10 +28,11 @@ const PriceRangeSlider = ({onSubmit, defaultPriceRange}: PriceRangeProps) => {
 
   return (
     <div className="relative">
-      <div>
+      <div id="input-range">
         <input
           type="range"
-          aria-label="input-price-range-min"
+          aria-label="input minimum price range slider"
+          aria-labelledby="input-range"
           name="byPriceRange"
           min={defaultPriceRange.min}
           max={defaultPriceRange.max}
@@ -46,12 +47,15 @@ const PriceRangeSlider = ({onSubmit, defaultPriceRange}: PriceRangeProps) => {
         />
         <input
           type="range"
+          aria-label="not changing input"
+          aria-labelledby="input-range"
           className="absolute h-0.5 w-full bg-[#61c200] [&::-moz-range-thumb]:cursor-none [&::-moz-range-thumb]:opacity-0 [&::-webkit-slider-thumb]:cursor-none [&::-webkit-slider-thumb]:opacity-0"
         />
         <input
           type="range"
           name="byPriceRange"
-          aria-label="input-price-range-max"
+          aria-label="input maximum price range slider"
+          aria-labelledby="input-range"
           min={defaultPriceRange.min}
           max={defaultPriceRange.max}
           value={maxPriceValue}

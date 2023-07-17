@@ -9,7 +9,7 @@ import {BdtIconDiscount} from '~/icons/bdt-icon-discount'
 import {BdtIconSortAsc} from '~/icons/bdt-icon-sort-asc'
 import {BdtIconSortDesc} from '~/icons/bdt-icon-sort-desc'
 import {useTranslation} from '~/localization/translation'
-import type {LoaderDataProps} from '~/routes/products.$searchTerm'
+import type { LoaderDataProps } from '~/models'
 
 export interface DropdownOption {
   value: DropdownSortBy
@@ -75,7 +75,7 @@ const SortDropdown = () => {
             id="menu-button"
             aria-expanded="true"
             aria-haspopup="true"
-            aria-label="open-sorting-menu"
+            aria-label="open sorting menu"
             onClick={() => (isOpen ? setIsOpen(false) : setIsOpen(true))}
           >
             <>

@@ -1,10 +1,4 @@
-import type {Product} from '../root'
-
-type Filters = 'priceRange' | 'pricing' | 'store' | 'condition' | 'brand' | 'shipping'
-
-type FilterFunc = (products: Product[], filterValues: string[]) => Product[]
-type FiltersType = Record<Filters, string[]>
-type FiltersMapType = Record<Filters, FilterFunc>
+import type {FiltersMapType, FiltersType, Product} from '~/models'
 
 const filtersMapType = {
   priceRange: (products, filterValues) =>

@@ -23,26 +23,26 @@ const Appbar = () => {
   return (
     <header className="contents">
       <nav className="sticky top-0 z-40">
-        <div className="mx-auto flex items-center justify-between bg-[#333333]">
+        <div className="mx-auto flex items-center justify-between bg-zinc-800">
           <BdtIconAppLogoOldstack className="z-50" />
           <Form
-            className="z-50 mx-auto flex min-w-[50%] justify-center tablet:hidden"
+            className="z-50 mx-auto flex min-w-1/2 justify-center tablet:hidden"
             method="post"
-            action="/products"
+            action="/search"
             reloadDocument
           >
             <input
               type="text"
-              aria-label="Search-input"
+              aria-label="Search input"
               name="search-query"
-              className="w-full p-1 pl-3 text-[#7b7b7b] outline-none placeholder:text-sm"
+              className="w-full p-1 pl-3 text-neutral-500 outline-none placeholder:text-sm"
               placeholder="Search deals"
               defaultValue=""
               required
             />
             <button
               className="bg-red-500 px-5 text-sm font-normal uppercase not-italic text-white"
-              aria-label="Search-button"
+              aria-label="desktop search button"
               type="submit"
             >
               Search
@@ -51,6 +51,7 @@ const Appbar = () => {
 
           <button
             className="ml-auto mr-5 hidden tablet:block"
+            aria-label="mobile search button"
             onClick={() =>
               mobileSearch === 'close' ? setMobileSearch('open') : setMobileSearch('close')
             }
@@ -63,7 +64,7 @@ const Appbar = () => {
             data-drawer-toggle="sidebar-mobile-menu"
             aria-controls="sidebar-mobile-menu"
             type="button"
-            aria-label="open-mobile-menu"
+            aria-label="open mobile menu"
             onClick={() =>
               mobileMenu === 'close' ? setMobileMenu('open') : setMobileMenu('close')
             }
@@ -80,27 +81,27 @@ const Appbar = () => {
               <Link
                 to={`/products${href}`}
                 className="text-sm font-light"
-                aria-label={`categories-${title}`}
+                aria-label={`explore ${title} category`}
               >
                 {title}
               </Link>
             </Fragment>
           ))}
-          <a href="/categories" className="text-sm font-light" aria-label="all-categories">
+          <a href="/categories" className="text-sm font-light" aria-label="explore all categories">
             See All
           </a>
         </div>
         <Form
           method="post"
-          action="/products"
+          action="/search"
           reloadDocument
-          className={`${mobileSearchClassName[mobileSearch]} sticky z-[-99999] hidden w-full bg-[#333333] px-5 pb-2 transition-transform tablet:top-0 tablet:block`}
+          className={`${mobileSearchClassName[mobileSearch]} sticky -z-50 hidden w-full bg-zinc-800 px-5 pb-2 transition-transform tablet:top-0 tablet:block`}
         >
           <input
             type="text"
-            aria-label="Search-input-mobile"
+            aria-label="Search input mobile"
             name="search-query"
-            className="w-full p-1 pl-3 text-[#7b7b7b] outline-none placeholder:text-sm"
+            className="w-full p-1 pl-3 text-neutral-500 outline-none placeholder:text-sm"
             placeholder="Search deals"
             defaultValue=""
             required
@@ -110,12 +111,12 @@ const Appbar = () => {
 
       <div
         id="sidebar-mobile-menu"
-        className={`${mobileMenuClassName[mobileMenu]} fixed left-0 top-0 z-50 w-full h-screen -translate-x-[-100%] flex-col bg-white p-8 transition-transform`}
+        className={`${mobileMenuClassName[mobileMenu]} fixed left-0 top-0 z-50 h-screen w-full -translate-x-[-100%] flex-col bg-white p-8 transition-transform`}
         aria-label="Sidebar"
       >
         <div className="mt-5 flex justify-between">
           <h4 className="text-sm font-semibold uppercase">{translation.MobileMenu.title}</h4>
-          <button type="button" aria-label="close-menu" onClick={() => setMobileMenu('close')}>
+          <button type="button" aria-label="close menu" onClick={() => setMobileMenu('close')}>
             <BdtIconClose className="h-5 w-5" />
           </button>
         </div>
@@ -126,13 +127,13 @@ const Appbar = () => {
                 onClick={() => setMobileMenu('close')}
                 to={`/products${href}`}
                 className="text-sm font-light"
-                aria-label={`categories-${title}`}
+                aria-label={`explore ${title} category`}
               >
                 {title}
               </Link>
             </Fragment>
           ))}
-          <a href="/categories" className="text-sm font-light" aria-label="all-categories">
+          <a href="/categories" className="text-sm font-light" aria-label="explore all categories">
             See All
           </a>
         </div>

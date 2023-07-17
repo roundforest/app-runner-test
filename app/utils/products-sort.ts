@@ -1,11 +1,4 @@
-import type {Product} from '../root'
-
-export type DropdownSortBy =
-  | 'bestMatch'
-  | 'discountDescending'
-  | 'expiringDate'
-  | 'priceAscending'
-  | 'priceDescending'
+import type {DropdownSortBy, Product} from '~/models'
 
 const sorters: Record<DropdownSortBy, (products: Product[]) => Product[]> = {
   bestMatch: (products) => products,

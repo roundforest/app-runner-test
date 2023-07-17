@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React, {Fragment, useRef} from 'react'
 import {Form, useLoaderData, useSubmit} from '@remix-run/react'
 import {getProductsByFilters} from '../utils/products-filter'
 import currencyFormatter from '~/utils/currency-formatter'
@@ -7,10 +7,12 @@ import DesktopFilter from './desktop-filter'
 import {useTranslation} from '~/localization/translation'
 import SortDropdown from './sort-dropdown'
 
-import type {LoaderDataProps} from '~/routes/products.$searchTerm'
+import type {LoaderDataProps} from '~/models'
 import {getSortedProducts} from '~/utils/products-sort'
 
 const Content = () => {
+  const mRef = useRef<HTMLDivElement>(null)
+
   const {
     data: {products, metadata},
     filterBy,
@@ -28,15 +30,16 @@ const Content = () => {
   return (
     <Form method="get" className="flex flex-row">
       <DesktopFilter handleOnChange={handleOnChange} />
-      <div className="h-full w-full px-6">
+      <div className="h-full w-full px-6" ref={mRef}>
         <div className="mb-4 mt-4 flex flex-col justify-center tablet:mt-0">
           <div className="overflow-visible">
             <div className="mt-5 flex flex-col gap-4 ">
-              <div className="ml-[-4px] flex flex-row text-[13px] leading-normal text-gray-400">
+              <div className="ml-[-4px] flex flex-row text-[13px] leading-normal text-gray-500">
                 {metadata.breadcrumbs.map((crump, i) => (
                   <a
                     key={i}
                     className='capitalize after:content-["/"] last:after:content-[""]'
+                    aria-label={`go to ${crump.title} category`}
                     href={crump.path}
                   >
                     &nbsp;&nbsp;{`${crump.title}`}
@@ -61,10 +64,10 @@ const Content = () => {
             </div>
           </div>
           <div className="mt-9 grid gap-5 xl-desktop:grid-cols-4 desktop:grid-cols-3 tablet:grid-cols-3 mobile:grid-cols-2">
-            {sortedProducts.map((p, i) => (
+            {sortedProducts.slice(0, 10).map((p, i) => (
               <Fragment key={`${p.title}-${i}`}>
                 <a
-                  aria-label="product-card"
+                  aria-label="product card"
                   href={p.redirectLinkTo}
                   rel="noreferrer"
                   target="_blank"
@@ -73,7 +76,7 @@ const Content = () => {
                   <div className="pb-8">
                     {p.merchantLogo && (
                       <img
-                        className="absolute right-3 top-3 h-5 mobile:hidden"
+                        className="absolute right-3 top-3 h-5 w-14 object-scale-down mobile:hidden"
                         src={p.merchantLogo}
                         alt={p.title}
                       />
@@ -85,11 +88,7 @@ const Content = () => {
                     </div>
                   )}
                   <div className="mx-auto flex h-32 w-32 items-center justify-center p-3">
-                    <img
-                      className="mx-auto h-32 w-32 object-scale-down"
-                      src={p.image}
-                      alt={p.title}
-                    />
+                    <img className="mx-auto h-32 w-32 object-fill" src={p.image} alt={p.title} />
                   </div>
                   <div className="h-32 p-3">
                     <div className="whitespace-no-wrap ... block w-full overflow-hidden text-ellipsis text-center">
@@ -111,13 +110,19 @@ const Content = () => {
                     </span>
                   </div>
                   <div className="hidden flex-row justify-center mobile:flex">
-                    {p.merchantLogo && <img className="h-5" src={p.merchantLogo} alt={p.title} />}
+                    {p.merchantLogo && (
+                      <img
+                        className="h-5 w-14 object-scale-down"
+                        src={p.merchantLogo}
+                        alt={p.title}
+                      />
+                    )}
                   </div>
                   <div>
                     <div className="p-3">
                       <button
                         className=" sm:text-sm w-full bg-[#61c200] p-0 px-4 py-2 font-normal uppercase text-white hover:bg-[#52a102]"
-                        aria-label="product-cta"
+                        aria-label="go to product page"
                       >
                         View Deal
                       </button>

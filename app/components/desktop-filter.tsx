@@ -8,7 +8,7 @@ import {
   getStoreFilterValues,
 } from '~/utils/products-filter'
 import PriceRangeSlider from './price-range-slider'
-import type {LoaderDataProps} from '~/routes/products.$searchTerm'
+import type {LoaderDataProps} from '~/models'
 
 interface DesktopFilterProps {
   handleOnChange: (e: any) => void
@@ -31,24 +31,23 @@ const DesktopFilter = ({handleOnChange}: DesktopFilterProps) => {
   return (
     <div
       className="sticky h-[100] min-w-[245px] bg-white px-5 py-8 drop-shadow-lg tablet:hidden"
-      aria-label="filters"
     >
       <div className="mt-2 flex flex-col gap-12" id="filter-sort">
         <div className="flex flex-row justify-between">
           <h1 className="text-[15px]">Filter by</h1>
           <button
-            className="text-[15px] font-light text-[#7b7b7b] underline"
-            aria-label="clear-all"
+            className="text-[15px] font-light text-neutral-500 underline"
+            aria-label="clear all filters"
           >
             Clear all
           </button>
         </div>
         <div className="flex flex-col gap-5">
-          <h1 className="text-[15px] text-[#7b7b7b]">Pricing range</h1>
+          <h1 className="text-[15px] text-neutral-500">Pricing range</h1>
           <PriceRangeSlider onSubmit={handleOnChange} defaultPriceRange={defaultPriceRange} />
         </div>
         <div className="flex flex-col gap-5">
-          <h1 className="text-[15px] text-[#7b7b7b]">Pricing</h1>
+          <h1 className="text-[15px] text-neutral-500">Pricing</h1>
           <FilterRow
             title="Fixed"
             value="fixed"
@@ -65,7 +64,7 @@ const DesktopFilter = ({handleOnChange}: DesktopFilterProps) => {
           />
         </div>
         <div className="flex flex-col gap-5">
-          <h1 className="text-[15px] text-[#7b7b7b]">Store</h1>
+          <h1 className="text-[15px] text-neutral-500">Store</h1>
           {storeNames.map((store, i) => {
             return (
               <React.Fragment key={`${store}-${i}`}>
@@ -81,7 +80,7 @@ const DesktopFilter = ({handleOnChange}: DesktopFilterProps) => {
           })}
         </div>
         <div className="flex flex-col gap-5">
-          <h1 className="text-[15px] text-[#7b7b7b]">Condition</h1>
+          <h1 className="text-[15px] text-neutral-500">Condition</h1>
           {conditions.map((condition, i) => {
             return (
               <React.Fragment key={`${condition}-${i}`}>
@@ -97,7 +96,7 @@ const DesktopFilter = ({handleOnChange}: DesktopFilterProps) => {
           })}
         </div>
         <div className="flex flex-col gap-5">
-          <h1 className="text-[15px] text-[#7b7b7b]">Brand</h1>
+          <h1 className="text-[15px] text-neutral-500">Brand</h1>
           {brandNames.map((brand, i) => {
             return (
               <React.Fragment key={`${brand}-${i}`}>
@@ -113,7 +112,7 @@ const DesktopFilter = ({handleOnChange}: DesktopFilterProps) => {
           })}
         </div>
         <div className="flex flex-col gap-5">
-          <h1 className="text-[15px] text-[#7b7b7b]">Other</h1>
+          <h1 className="text-[15px] text-neutral-500">Other</h1>
           <FilterRow
             title="Free Shipping"
             value="shipping"
