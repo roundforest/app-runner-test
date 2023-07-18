@@ -17,10 +17,12 @@ const Content = () => {
     data: {products, metadata},
     filterBy,
     sortBy,
+    featureFlags
   } = useLoaderData<LoaderDataProps>()
   const translation = useTranslation()
   const submit = useSubmit()
-  const filteredProducts = getProductsByFilters(products.slice(0, 35), filterBy)
+  const maxProductsQty = featureFlags['products-quantity'] ?? 20
+  const filteredProducts = getProductsByFilters(products.slice(0, maxProductsQty), filterBy)
   const sortedProducts = getSortedProducts(filteredProducts, sortBy)
 
   const handleOnChange = (e: any) => {
