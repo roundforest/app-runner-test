@@ -1,6 +1,6 @@
 import {useLoaderData} from '@remix-run/react'
 import React, {Fragment, useState} from 'react'
-import type {DropdownSortBy} from '~/utils/products-sort'
+import type {DropdownSortBy, LoaderDataProps} from '~/models'
 import {BdtIconBestMatch} from '~/icons/bdt-icon-best-match'
 import {BdtIconCalendar} from '~/icons/bdt-icon-calendar'
 import {BdtIconChevronDown} from '~/icons/bdt-icon-chevron-down'
@@ -9,7 +9,6 @@ import {BdtIconDiscount} from '~/icons/bdt-icon-discount'
 import {BdtIconSortAsc} from '~/icons/bdt-icon-sort-asc'
 import {BdtIconSortDesc} from '~/icons/bdt-icon-sort-desc'
 import {useTranslation} from '~/localization/translation'
-import type { LoaderDataProps } from '~/models'
 
 export interface DropdownOption {
   value: DropdownSortBy

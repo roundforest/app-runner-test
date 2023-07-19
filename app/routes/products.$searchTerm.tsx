@@ -33,7 +33,7 @@ export const loader: LoaderFunction = async ({params, request}) => {
   const {locale, language, currencyCode} = mapHostHeaderToLocaleParams(host)
 
   const featureFlagsOverrides = extractFeatureFlagOverridesFromQueryParams(
-    Object.fromEntries(searchParams)
+    Object.fromEntries(searchParams),
   )
   const priceRange = searchParams.getAll('byPriceRange')
   const pricing = searchParams.getAll('byPricing')
@@ -75,7 +75,7 @@ export const loader: LoaderFunction = async ({params, request}) => {
       },
       sortBy,
     },
-    {headers}
+    {headers},
   )
 }
 

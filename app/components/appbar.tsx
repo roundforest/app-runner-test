@@ -1,4 +1,4 @@
-import {Form, Link} from '@remix-run/react'
+import {Form, Link, useNavigation} from '@remix-run/react'
 import React, {Fragment, useState} from 'react'
 import {BdtIconClose} from '~/icons/bdt-icon-close'
 import {BdtIconAppLogoOldstack} from '~/icons/bdt-icon-logo-oldstack'
@@ -19,7 +19,9 @@ const Appbar = () => {
   const [mobileMenu, setMobileMenu] = useState<'open' | 'close'>('close')
   const [mobileSearch, setMobileSearch] = useState<'open' | 'close'>('open')
   const translation = useTranslation()
+  const transition = useNavigation()
 
+  console.log('transition ---> ', transition)
   return (
     <header className="contents">
       <nav className="sticky top-0 z-40">

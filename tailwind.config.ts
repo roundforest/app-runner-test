@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss'
+/** @type {import('tailwindcss').Config} */
 
 export default {
   content: ['./app/**/*.{js,jsx,ts,tsx}'],
@@ -17,33 +17,8 @@ export default {
     minWidth: {
       '1/2': '50%',
     },
-    extend: {
-      // keyframes: {
-      //   slideToLeft: {
-      //     '0%': {transform: 'translateX(100%)'},
-      //     '100%': {transform: 'translateX(0px)'},
-      //   },
-      //   slideToRight: {
-      //     '0%': {transform: 'translateX(0px)'},
-      //     '100%': {transform: 'translateX(100%)'},
-      //   },
-      //   slideUp: {
-      //     '0%': {transform: 'translateY(0%)'},
-      //     '100%': {transform: 'translateY(-100%)'},
-      //   },
-      //   slideDown: {
-      //     '0%': {transform: 'translateY(-100%)'},
-      //     '100%': {transform: 'translateY(0%)'},
-      //   },
-      // },
-      // animation: {
-      //   slideToLeft: 'slideToLeft 0.2s forwards',
-      //   slideToRight: 'slideToRight 0.2s forwards',
-      //   slideUp: 'slideUp 0.2s forwards',
-      //   slideDown: 'slideDown 0.2s forwards',
-      // },
-    },
+    extend: {},
   },
   variants: {},
   plugins: [require('@tailwindcss/forms'), require('prettier-plugin-tailwindcss')],
-} satisfies Config
+}
