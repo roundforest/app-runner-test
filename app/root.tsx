@@ -4,10 +4,21 @@ import {
   Outlet,
   Scripts,
   isRouteErrorResponse,
+  useLoaderData,
   useRouteError,
 } from '@remix-run/react'
-import {type LinksFunction} from '@remix-run/node'
+import {json, type LoaderFunction, type LinksFunction} from '@remix-run/node'
 import stylesheet from '~/styles/app.css'
+import {
+  mapHostHeaderToLocaleParams,
+  mapLocaleToGoogleAnalyticsMeasurementId,
+} from './utils/map-locale'
+import {makeId, pageId, sessionId, userId} from './utils/cookies.server'
+
+import {GOOGLE_ADS_KEY} from './utils/ga/ga-commons'
+import {getABTests, normalizeFeatureFlags} from './utils/launchdarkly/feature-flags'
+import {getLdClient} from './utils/launchdarkly/launch-darkly.server'
+import {isMobile} from 'react-device-detect'
 
 export const links: LinksFunction = () => [{rel: 'stylesheet', href: stylesheet}]
 
@@ -37,7 +48,59 @@ export function ErrorBoundary() {
   }
 }
 
+export const loader: LoaderFunction = async ({request}) => {
+  const cookieHeader = request.headers.get('Cookie')
+  const host = request.headers.get('host') || ''
+  const {locale} = mapHostHeaderToLocaleParams(host)
+
+  const userIdCookie = await userId.parse(cookieHeader)
+  const sessionIdCookie = await sessionId.parse(cookieHeader)
+  const pageLoadIdCookie = await pageId.parse(cookieHeader)
+
+  const headers = new Headers()
+
+  if (!userIdCookie) headers.append('Set-Cookie', await userId.serialize(makeId()))
+  if (!sessionIdCookie) headers.append('Set-Cookie', await sessionId.serialize(makeId()))
+  if (!pageLoadIdCookie) headers.append('Set-Cookie', await pageId.serialize(makeId()))
+
+  const launchDarkly = await getLdClient()
+
+  launchDarkly.identify({
+    custom: {
+      domain: host,
+      device: isMobile ? 'mobile' : 'desktop',
+    },
+    key: userIdCookie,
+    country: locale,
+  })
+
+  const allFeatureFlags = await launchDarkly?.allFlagsState({key: userIdCookie ?? 'key'})
+
+  const featureFlags = normalizeFeatureFlags(allFeatureFlags?.allValues())
+
+  return json(
+    {
+      locale,
+      pageLoadIdCookie,
+      featureFlags,
+    },
+    {headers},
+  )
+}
+
 export default function App() {
+  const {locale, pageLoadIdCookie, featureFlags} = useLoaderData<typeof loader>()
+  const googleAnalyticsMeasurementId = mapLocaleToGoogleAnalyticsMeasurementId(locale)
+
+  const windowConfig = {
+    pageLoadIdCookie,
+    referrer: '',
+    featureFlags: featureFlags,
+    featureFlagsHash: '',
+    abTests: getABTests(featureFlags),
+    abTestsHash: '',
+  }
+
   return (
     <html lang="en">
       <head>
@@ -61,6 +124,33 @@ export default function App() {
         <title>Store Page</title>
       </head>
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__CONFIGURATION__ = ${JSON.stringify(windowConfig)};`,
+          }}
+        />
+        {process.env.NODE_ENV === 'development' ? null : (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsMeasurementId}`}
+            />
+            <script
+              async
+              id="gtag-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag() { dataLayer.push(arguments); }
+                  gtag('js', new Date());
+                  gtag('config', '${GOOGLE_ADS_KEY}');
+                  gtag('config', '${googleAnalyticsMeasurementId}', {'page_load_id': '${pageLoadIdCookie}'});
+                  gtag('event', 'nonceReady');
+                `,
+              }}
+            />
+          </>
+        )}
         <Outlet />
         <Scripts />
         <LiveReload />

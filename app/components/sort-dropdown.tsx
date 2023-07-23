@@ -1,6 +1,5 @@
 import {useLoaderData} from '@remix-run/react'
 import React, {Fragment, useState} from 'react'
-import type {DropdownSortBy, LoaderDataProps} from '~/models'
 import {BdtIconBestMatch} from '~/icons/bdt-icon-best-match'
 import {BdtIconCalendar} from '~/icons/bdt-icon-calendar'
 import {BdtIconChevronDown} from '~/icons/bdt-icon-chevron-down'
@@ -9,6 +8,7 @@ import {BdtIconDiscount} from '~/icons/bdt-icon-discount'
 import {BdtIconSortAsc} from '~/icons/bdt-icon-sort-asc'
 import {BdtIconSortDesc} from '~/icons/bdt-icon-sort-desc'
 import {useTranslation} from '~/localization/translation'
+import type {DropdownSortBy, LoaderDataProps} from '~/models'
 
 export interface DropdownOption {
   value: DropdownSortBy
@@ -20,6 +20,7 @@ const SortDropdown = () => {
   const translation = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const {sortBy} = useLoaderData<LoaderDataProps>()
+
   const options = [
     {
       label: translation.SortByDropDown.Options.bestMatch,
@@ -48,13 +49,7 @@ const SortDropdown = () => {
     },
   ] as DropdownOption[]
 
-  const defaultSortValue =
-    !sortBy || !sortBy.length || !options.map(({value}) => value).includes(sortBy)
-      ? 'bestMatch'
-      : sortBy
-
-  const [currentSortValue, setCurrentSortValue] = useState<DropdownSortBy>(defaultSortValue)
-
+  const [currentSortValue, setCurrentSortValue] = useState<DropdownSortBy>(sortBy)
   const dropdownClassName = isOpen
     ? 'border-[#d8d8d8 absolute right-0 z-10 w-[210px] origin-top-right border-[0.5px] border-solid bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
     : 'hidden border-[#d8d8d8 absolute right-0 z-10 w-[210px] origin-top-right border-[0.5px] border-solid bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'

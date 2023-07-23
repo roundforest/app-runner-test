@@ -111,6 +111,7 @@ export interface LoaderDataProps {
   featureFlags: Record<string, any>
   filterBy: FilterByProps
   sortBy: DropdownSortBy
+  itemsPerPage?: number
 }
 
 export type Filters = 'priceRange' | 'pricing' | 'store' | 'condition' | 'brand' | 'shipping'

@@ -13,35 +13,27 @@ import jp from './jp.js'
 import uk from './uk.js'
 import india from './in.js'
 
+type TranslationByLocale = Record<string, typeof en>
+
+const mapTranslationByLocale: TranslationByLocale = {
+  en: en,
+  au: au,
+  mx: mx,
+  sg: sg,
+  ca: ca,
+  de: de,
+  es: es,
+  fr: fr,
+  it: it,
+  jp: jp,
+  uk: uk,
+  in: india,
+}
+
 export function useTranslation() {
   const {locale} = useLoaderData()
 
   const lowercaseLocale = locale.toLocaleLowerCase()
 
-  switch (lowercaseLocale) {
-    case 'au':
-      return au
-    case 'mx':
-      return mx
-    case 'sg':
-      return sg
-    case 'ca':
-      return ca
-    case 'de':
-      return de
-    case 'es':
-      return es
-    case 'fr':
-      return fr
-    case 'it':
-      return it
-    case 'jp':
-      return jp
-    case 'uk':
-      return uk
-    case 'in':
-      return india
-    default:
-      return en
-  }
+  return mapTranslationByLocale[lowercaseLocale as keyof TranslationByLocale]
 }

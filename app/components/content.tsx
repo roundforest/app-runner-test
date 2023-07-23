@@ -1,30 +1,44 @@
 import React, {Fragment, useRef} from 'react'
 import {Form, useLoaderData, useSubmit} from '@remix-run/react'
-import {getProductsByFilters} from '../utils/products-filter'
 import currencyFormatter from '~/utils/currency-formatter'
 import {BdtIconShipping} from '~/icons/bdt-icon-free-shipping'
 import DesktopFilter from './desktop-filter'
 import {useTranslation} from '~/localization/translation'
 import SortDropdown from './sort-dropdown'
-
+import {useInView} from 'react-intersection-observer'
 import type {LoaderDataProps} from '~/models'
-import {getSortedProducts} from '~/utils/products-sort'
+import {getSortedProducts} from '~/utils/products/products-sort'
+import {getProductsByFilters} from '~/utils/products/products-filter'
+import {useLoadMore} from '~/utils/use-load-more'
 
 const Content = () => {
   const mRef = useRef<HTMLDivElement>(null)
-
   const {
     data: {products, metadata},
     filterBy,
+    featureFlags,
     sortBy,
-    featureFlags
+    itemsPerPage,
   } = useLoaderData<LoaderDataProps>()
+
+  const {data, loadMore, hasNext} = useLoadMore({
+    items: products,
+    itemsPerPage: itemsPerPage ?? 25,
+  })
+
   const translation = useTranslation()
   const submit = useSubmit()
-  const maxProductsQty = featureFlags['products-quantity'] ?? 20
-  const filteredProducts = getProductsByFilters(products.slice(0, maxProductsQty), filterBy)
-  const sortedProducts = getSortedProducts(filteredProducts, sortBy)
 
+  const [loadMoreTriggerRef] = useInView({
+    skip: !hasNext(),
+    onChange: (inView) => {
+      if (inView) {
+        loadMore()
+      }
+    },
+  })
+  const filteredProducts = getProductsByFilters(data, filterBy)
+  const sortedProducts = getSortedProducts(filteredProducts, sortBy)
   const handleOnChange = (e: any) => {
     submit(e.target.form)
   }
@@ -50,13 +64,19 @@ const Content = () => {
                 ))}
               </div>
               <div className="flex flex-row">
-                <div className="flex flex-row gap-5 tablet:flex-col tablet:gap-3 mobile:pr-0">
+                <div
+                  className={
+                    featureFlags?.showRedTitle
+                      ? 'flex flex-row gap-5 tablet:flex-col tablet:gap-3 mobile:pr-0 text-red-500'
+                      : 'flex flex-row gap-5 tablet:flex-col tablet:gap-3 mobile:pr-0'
+                  }
+                >
                   <span className="text-2xl capitalize">
                     {translation.PageTitleDeals(metadata.query)}
                     &nbsp;{translation.PageTitleLocale}
                   </span>
                   <span className="flex items-center text-base font-light leading-none text-[#686868]">
-                    {sortedProducts.length} deals found
+                    {products.length} deals found
                   </span>
                 </div>
                 <SortDropdown />
@@ -66,7 +86,7 @@ const Content = () => {
             </div>
           </div>
           <div className="mt-9 grid gap-5 xl-desktop:grid-cols-4 desktop:grid-cols-3 tablet:grid-cols-3 mobile:grid-cols-2">
-            {sortedProducts.slice(0, 10).map((p, i) => (
+            {sortedProducts.map((p, i) => (
               <Fragment key={`${p.title}-${i}`}>
                 <a
                   aria-label="product card"
@@ -90,7 +110,11 @@ const Content = () => {
                     </div>
                   )}
                   <div className="mx-auto flex h-32 w-32 items-center justify-center p-3">
-                    <img className="mx-auto h-32 w-32 object-fill" src={p.image} alt={p.title} />
+                    <img
+                      className="mx-auto h-32 w-32 object-scale-down"
+                      src={p.image}
+                      alt={p.title}
+                    />
                   </div>
                   <div className="h-32 p-3">
                     <div className="whitespace-no-wrap ... block w-full overflow-hidden text-ellipsis text-center">
@@ -133,6 +157,7 @@ const Content = () => {
                 </a>
               </Fragment>
             ))}
+            <div ref={loadMoreTriggerRef} />
           </div>
         </div>
       </div>

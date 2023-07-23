@@ -1,40 +1,35 @@
 import type {LoaderFunction} from '@remix-run/node'
 import {json} from '@remix-run/node'
+import {useEffect} from 'react'
+import {isMobile} from 'react-device-detect'
 
 import Appbar from '~/components/appbar'
 import Content from '~/components/content'
 
 import Footer from '~/components/footer'
 import type {DropdownSortBy, LoaderDataProps} from '~/models'
-import {makeId, pageId, sessionId, userId} from '~/utils/cookies.server'
+import {makeId, userId} from '~/utils/cookies.server'
+import {gaClient} from '~/utils/ga/gtag.client'
 import {
   extractFeatureFlagOverridesFromQueryParams,
   normalizeFeatureFlags,
-} from '~/utils/feature-flags'
-import {mapHostHeaderToLocaleParams} from '~/utils/host-header-locale'
-import {getLdClient} from '~/utils/launch-darkly.server'
-
-import {getFakeData, getRealData} from '~/utils/products-data.server'
+} from '~/utils/launchdarkly/feature-flags'
+import {getLdClient} from '~/utils/launchdarkly/launch-darkly.server'
+import {mapHostHeaderToLocaleParams} from '~/utils/map-locale'
+import {getFakeData, getRealData} from '~/utils/products/products-data.server'
 
 export const loader: LoaderFunction = async ({params, request}) => {
+  const url = new URL(request.url)
+  const host = request.headers.get('host') || ''
   const cookieHeader = request.headers.get('Cookie')
   const userIdCookie = await userId.parse(cookieHeader)
-  const sessionIdCookie = await sessionId.parse(cookieHeader)
-  const pageIdCookie = await pageId.parse(cookieHeader)
-  const headers = new Headers()
-  if (!userIdCookie) headers.append('Set-Cookie', await userId.serialize(makeId()))
-  if (!sessionIdCookie) headers.append('Set-Cookie', await sessionId.serialize(makeId()))
-  if (!pageIdCookie) headers.append('Set-Cookie', await pageId.serialize(makeId()))
-
-  const url = new URL(request.url)
   const {searchParams} = url
   const {searchTerm} = params
-  const host = request.headers.get('host') || ''
   const {locale, language, currencyCode} = mapHostHeaderToLocaleParams(host)
 
-  const featureFlagsOverrides = extractFeatureFlagOverridesFromQueryParams(
-    Object.fromEntries(searchParams),
-  )
+  const headers = new Headers()
+  if (!userIdCookie) headers.append('Set-Cookie', await userId.serialize(makeId()))
+
   const priceRange = searchParams.getAll('byPriceRange')
   const pricing = searchParams.getAll('byPricing')
   const store = searchParams.getAll('byStore')
@@ -42,29 +37,40 @@ export const loader: LoaderFunction = async ({params, request}) => {
   const brand = searchParams.getAll('byBrand')
   const shipping = searchParams.getAll('byShipping')
   const sortBy = (searchParams.get('sortBy') ?? 'bestMatch') as DropdownSortBy
-  const data =
-    process.env.NODE_ENV === 'production' ? await getRealData(searchTerm || '') : getFakeData()
 
   const launchDarkly = await getLdClient()
+
   launchDarkly.identify({
     custom: {
       domain: host,
+      device: isMobile ? 'mobile' : 'desktop',
     },
     key: userIdCookie,
     country: locale,
   })
 
-  const featureFlags = await launchDarkly?.allFlagsState({key: userIdCookie})
+  const allFeatureFlags = await launchDarkly?.allFlagsState({key: userIdCookie ?? 'key'})
+  const featureFlagsOverrides = extractFeatureFlagOverridesFromQueryParams(
+    Object.fromEntries(searchParams),
+  )
+  const overridedFeatureFlags = normalizeFeatureFlags(
+    allFeatureFlags?.allValues(),
+    featureFlagsOverrides,
+  )
 
-  const allFlags = normalizeFeatureFlags(featureFlags?.allValues(), featureFlagsOverrides)
+  const data =
+    process.env.NODE_ENV === 'production' ? await getRealData(searchTerm || '') : getFakeData()
+
+  const itemsPerPage = isMobile ? 8 : 25
 
   return json<LoaderDataProps>(
     {
       data,
       locale,
       language,
+      itemsPerPage,
       currencyCode,
-      featureFlags: allFlags,
+      featureFlags: overridedFeatureFlags,
       filterBy: {
         priceRange,
         pricing,
@@ -75,11 +81,15 @@ export const loader: LoaderFunction = async ({params, request}) => {
       },
       sortBy,
     },
-    {headers},
+    // {headers},
   )
 }
 
 export default function Products() {
+  useEffect(() => {
+    gaClient.sendPageInfoEvent({main_info: 'remix-products-page-info'})
+  }, [])
+
   return (
     <main className="flex flex-col">
       <Appbar />

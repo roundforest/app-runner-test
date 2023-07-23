@@ -2,13 +2,14 @@ import {useLoaderData} from '@remix-run/react'
 import React from 'react'
 
 import FilterRow from './filter-row'
+
+import PriceRangeSlider from './price-range-slider'
+import type {LoaderDataProps} from '~/models'
 import {
   getBrandFilterValues,
   getConditionFilterValues,
   getStoreFilterValues,
-} from '~/utils/products-filter'
-import PriceRangeSlider from './price-range-slider'
-import type {LoaderDataProps} from '~/models'
+} from '~/utils/products/products-filter'
 
 interface DesktopFilterProps {
   handleOnChange: (e: any) => void
@@ -18,6 +19,7 @@ const DesktopFilter = ({handleOnChange}: DesktopFilterProps) => {
     data: {products},
     filterBy,
   } = useLoaderData<LoaderDataProps>()
+
   const productsPriceList = products.map(({price}) => price)
   const defaultPriceRange = {
     min: Math.min(...productsPriceList),
@@ -29,9 +31,7 @@ const DesktopFilter = ({handleOnChange}: DesktopFilterProps) => {
   const conditions = getConditionFilterValues(products)
 
   return (
-    <div
-      className="sticky h-[100] min-w-[245px] bg-white px-5 py-8 drop-shadow-lg tablet:hidden"
-    >
+    <div className="sticky h-[100] min-w-[245px] bg-white px-5 py-8 drop-shadow-lg tablet:hidden">
       <div className="mt-2 flex flex-col gap-12" id="filter-sort">
         <div className="flex flex-row justify-between">
           <h1 className="text-[15px]">Filter by</h1>
