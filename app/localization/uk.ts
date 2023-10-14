@@ -1,7 +1,7 @@
-import en from './en.js'
+import us from './us.js'
 
 export default {
-  ...en,
+  ...us,
   PageTitleDeals: (categoryName: string) => `${categoryName} deals`,
   PageTitleLocale: `in the UK`,
-} as typeof en
+} as typeof us

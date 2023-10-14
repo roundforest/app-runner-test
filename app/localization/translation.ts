@@ -1,6 +1,6 @@
 import {useLoaderData} from '@remix-run/react'
 
-import en from './en.js'
+import us from './us.js'
 import au from './au.js'
 import mx from './mx.js'
 import sg from './sg.js'
@@ -12,11 +12,12 @@ import it from './it.js'
 import jp from './jp.js'
 import uk from './uk.js'
 import india from './in.js'
+import type {LoaderDataProps} from '~/models/index.js'
 
-type TranslationByLocale = Record<string, typeof en>
+type TranslationByLocale = Record<string, typeof us>
 
-const mapTranslationByLocale: TranslationByLocale = {
-  en: en,
+export const mapTranslationByLocale: TranslationByLocale = {
+  us: us,
   au: au,
   mx: mx,
   sg: sg,
@@ -31,7 +32,7 @@ const mapTranslationByLocale: TranslationByLocale = {
 }
 
 export function useTranslation() {
-  const {locale} = useLoaderData()
+  const {locale} = useLoaderData<LoaderDataProps>()
 
   const lowercaseLocale = locale.toLocaleLowerCase()
 

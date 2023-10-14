@@ -3,14 +3,7 @@ import type {BdtIconProps} from './common-types.js'
 
 export function BdtIconAppLogoOldstack(attrs: BdtIconProps) {
   return (
-    <svg
-      width="137"
-      height="49"
-      viewBox="0 0 137 49"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...attrs}
-    >
+    <svg width="137" height="49" viewBox="0 0 137 49" fill="none" xmlns="http://www.w3.org/2000/svg" {...attrs}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"

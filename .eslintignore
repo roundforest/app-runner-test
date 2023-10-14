@@ -1,0 +1,13 @@
+dist
+play
+fixtures
+types
+lib
+bundled
+vitest.config.js
+.cashe
+build
+node_modules
+tailwind.config.ts
+remix.config.js
+remix.env.d.ts

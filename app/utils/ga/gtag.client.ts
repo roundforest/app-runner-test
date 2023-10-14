@@ -1,4 +1,7 @@
-import {GOOGLE_ADS_ID, GOOGLE_ADS_KEY, makeClient} from './ga-commons'
+import {makeClient} from '@roundforest/ga-commons'
+
+export const GOOGLE_ADS_KEY = 'AW-978239894'
+export const GOOGLE_ADS_ID = 'CFwgCNW7wFkQloO70gM'
 
 function makeGoogleAnalyticsClient(): ReturnType<typeof makeClient> {
   const {

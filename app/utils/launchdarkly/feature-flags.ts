@@ -1,4 +1,3 @@
-// import {mapObject} from '@roundforest/functional-commons'
 import type {LDFlagSet} from 'launchdarkly-node-server-sdk'
 import {mapObject} from '../map-object'
 
@@ -73,10 +72,7 @@ export function normalizeFeatureFlags(
     .reduce((p: any, n: any) => (n[0] ? {...p, [n[0]]: n[1]} : p), {})
   if (overrides) {
     const correlatedTypes = mapObject(overrides, (key, value) => {
-      return [
-        key,
-        parseAndCorrelateType(ff[key], value),
-      ]
+      return [key, parseAndCorrelateType(ff[key], value)]
     })
     return Object.assign(ff, correlatedTypes)
   }

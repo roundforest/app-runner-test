@@ -4,8 +4,22 @@ interface LocaleParams {
   currencyCode: string
 }
 
+export const hostNameByLocale: Record<string, string> = {
+  ca: 'ca.bestdeals.today',
+  jp: 'jp.bestdeals.today',
+  sg: 'sg.bestdeals.today',
+  mx: 'mx.bestdeals.today',
+  it: 'it.bestdeals.today',
+  fr: 'fr.bestdeals.today',
+  es: 'es.bestdeals.today',
+  uk: 'uk.bestdeals.today',
+  au: 'au.bestdeals.today',
+  in: 'in.bestdeals.today',
+  de: 'de.bestdeals.today',
+}
+
 const mapHostHeaderByLocale: Record<string, LocaleParams> = {
-  en: {locale: 'en', language: 'en-US', currencyCode: 'USD'},
+  us: {locale: 'us', language: 'en-US', currencyCode: 'USD'},
   au: {locale: 'au', language: 'en-AU', currencyCode: 'AUD'},
   ca: {locale: 'ca', language: 'en-CA', currencyCode: 'CAD'},
   de: {locale: 'de', language: 'de-DE', currencyCode: 'EUR'},
@@ -35,12 +49,12 @@ const mapMeasurmentByLocale: Record<string, string> = {
 }
 
 export function mapHostHeaderToLocaleParams(hostHeader: string | null | undefined) {
-  if (!hostHeader) return mapHostHeaderByLocale.en
+  if (!hostHeader) return mapHostHeaderByLocale.us
   let locale = hostHeader.split('.')[0]
   if (locale.endsWith('2')) {
     locale = locale.slice(0, -1)
   }
-  return mapHostHeaderByLocale[locale] ?? mapHostHeaderByLocale.en
+  return mapHostHeaderByLocale[locale] ?? mapHostHeaderByLocale.us
 }
 
 export function mapLocaleToGoogleAnalyticsMeasurementId(locale: string | undefined): string {

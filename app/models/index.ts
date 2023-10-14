@@ -1,3 +1,5 @@
+import type {ReactElement, ReactNode, Ref} from 'react'
+import type {UseReportWidgetClickCallbackProps} from '../hooks/analytics-hooks'
 import type {CamelCasedProperties} from 'type-fest'
 
 export interface ProductConditions {
@@ -54,7 +56,10 @@ export interface ProductOriginalApiModel {
 }
 
 export type Metadata = CamelCasedProperties<MetadataOriginalApiModel>
-
+export interface PriceRange {
+  min: number
+  max: number
+}
 export interface MainCategoryInfoProps {
   browseNodeId?: string
   browseNodeName?: string
@@ -88,34 +93,91 @@ export interface ProductsAndMetadataResponse {
   TEST_apiUrl?: string
 }
 
-export interface FilterByProps {
-  priceRange: string[]
-  pricing: string[]
-  store: string[]
-  condition: string[]
-  brand: string[]
-  shipping: string[]
+export interface FiltersProps {
+  byPriceRange: string[]
+  byPriceRanges: string[]
+  byPricing: string[]
+  byStore: string[]
+  byCondition: string[]
+  byBrand: string[]
+  byShipping: string[]
 }
-export type DropdownSortBy =
-  | 'bestMatch'
-  | 'discountDescending'
-  | 'expiringDate'
-  | 'priceAscending'
-  | 'priceDescending'
+export type DropdownSort = 'bestMatch' | 'discountDescending' | 'expiringDate' | 'priceAscending' | 'priceDescending'
 
 export interface LoaderDataProps {
   data: ProductsAndMetadataResponse
+  featureFlags: Record<string, boolean | string>
   locale: string
   language: string
+  slug: string
+  categoryName: string
   currencyCode: string
-  featureFlags: Record<string, any>
-  filterBy: FilterByProps
-  sortBy: DropdownSortBy
+  filters: FiltersProps
+  sorters: DropdownSort
   itemsPerPage?: number
+  pageLoadIdCookie?: string
 }
 
-export type Filters = 'priceRange' | 'pricing' | 'store' | 'condition' | 'brand' | 'shipping'
-
+export type Filters =
+  | 'byPricing'
+  | 'byStore'
+  | 'byCondition'
+  | 'byBrand'
+  | 'byShipping'
+  | 'byPriceRange'
+  | 'byPriceRanges'
 export type FilterFunc = (products: Product[], filterValues: string[]) => Product[]
 export type FiltersType = Record<Filters, string[]>
 export type FiltersMapType = Record<Filters, FilterFunc>
+
+export type Trigger = 'scroll-intent' | 'exit-intent' | 'immediate'
+export type Placement = 'prime-day-popup' | 'prime-day-sticky-footer'
+export type TriggerMap = Record<Trigger, (children: ReactElement) => ReactElement>
+export type PlacementMap = Record<
+  Placement,
+  ({targetUrl, widgetSeenRef, sendElementClickEvent}: PlacementProps) => ReactElement
+>
+
+export interface TriggerWrapperProps {
+  trigger: Trigger
+  children: ReactElement
+}
+export interface PlacementWrapperProps {
+  placement: Placement
+  children: ReactElement
+}
+
+export type AssetsConfigProps = {
+  placement: Placement
+  trigger: Trigger
+  delay?: number
+  targetUrl: string
+}
+
+export interface PlacementProps {
+  widgetSeenRef: Ref<HTMLDivElement>
+  sendElementClickEvent: (props?: UseReportWidgetClickCallbackProps) => void
+  targetUrl: string
+  delay?: number
+}
+
+export type FeedbackStep = 'hide' | 'rate' | 'review' | 'bookMeeting' | 'thank-dailog' | 'calendly'
+
+export interface FeedbackMainProps {
+  children?: ReactNode
+  categorySlug: string
+}
+export interface FeedbackState {
+  rating?: number
+  review?: string
+  email?: string
+  error?: string
+  step: FeedbackStep
+}
+export interface SlackPayload {
+  slug: string
+  rating?: number
+  review?: string
+  email?: string
+  error?: string
+}

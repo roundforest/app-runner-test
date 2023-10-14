@@ -1,135 +1,11 @@
 import React from 'react'
 import {BdtIconAppLogoFooter} from '~/icons/bdt-icon-logo-footer'
-
-const navigation = [
-  {
-    title: 'General',
-    menuItems: [
-      {
-        title: 'Home',
-        href: '/',
-      },
-      {
-        title: 'Privacy',
-        href: '/privacy',
-      },
-      {
-        title: 'Terms & Conditions',
-        href: '/terms',
-      },
-      {title: 'Contact Us', href: '/contact-us'},
-    ],
-  },
-  {
-    title: 'Popular searches',
-    menuItems: [
-      {
-        title: 'Oculus Quest 2',
-        href: '/oculus-quest-2',
-      },
-      {
-        title: 'Airpod Pro',
-        href: '/airpod-pro',
-      },
-      {
-        title: 'Ember Wave',
-        href: '/ember-wave',
-      },
-      {
-        title: 'Dyson Airwrap Complete',
-        href: '/dyson-airwrap-complete',
-      },
-      {
-        title: 'Uniden R7',
-        href: '/uniden-r-7',
-      },
-      {
-        title: 'Nintendo Switch',
-        href: '/nintendo-switch',
-      },
-      {
-        title: 'Laptop',
-        href: '/laptop',
-      },
-    ],
-  },
-  {
-    title: 'Categories',
-    menuItems: [
-      {
-        title: 'Electronics',
-        href: '/electronics',
-      },
-      {
-        title: 'Appliances',
-        href: '/appliances',
-      },
-      {
-        title: 'Automotive',
-        href: '/automotive',
-      },
-      {
-        title: 'Software',
-        href: '/software',
-      },
-      {
-        title: 'Home & Kitchen',
-        href: '/home-kitchen',
-      },
-    ],
-  },
-  {
-    title: 'International sites',
-    menuItems: [
-      {
-        title: 'France',
-        href: '//fr.bestdeals.today',
-      },
-      {
-        title: 'Australia',
-        href: '//au.bestdeals.today',
-      },
-      {
-        title: 'Spain',
-        href: '//es.bestdeals.today',
-      },
-      {
-        title: 'Japan',
-        href: '//jp.bestdeals.today',
-      },
-      {
-        title: 'Italy',
-        href: '//it.bestdeals.today',
-      },
-      {
-        title: 'Germany',
-        href: '//de.bestdeals.today',
-      },
-      {
-        title: 'Canada',
-        href: '//ca.bestdeals.today',
-      },
-      {
-        title: 'Singapore',
-        href: '//sg.bestdeals.today',
-      },
-      {
-        title: 'United Kingdom',
-        href: '//uk.bestdeals.today',
-      },
-      {
-        title: 'Mexico',
-        href: '//mx.bestdeals.today',
-      },
-      {
-        title: 'India',
-        href: '//in.bestdeals.today',
-      },
-    ],
-  },
-]
+import {useTranslation} from '~/localization/translation'
+import {SocialMediaLink} from './social-media-link'
 
 const Footer = () => {
+  const translation = useTranslation()
+
   return (
     <footer className="bg-zinc-800 px-[24px]">
       <div className="mx-auto max-w-[1400px] py-[40px] text-white">
@@ -137,8 +13,8 @@ const Footer = () => {
           <a href="/" className="mt-5 tablet:mb-10" aria-label="go to home page">
             <BdtIconAppLogoFooter width={104} height={62} />
           </a>
-          {navigation.map((item, i) => (
-            <div key={`${item}-${i}`} className="p-5">
+          {translation.AppFooter.Navigation.map((item, menuIndex) => (
+            <div key={`${item}-${menuIndex}`} className="p-5">
               <h4 className="mb-4 font-bold uppercase text-white">{item.title}</h4>
               <ul>
                 {item.menuItems.map((menuItem, index) => (
@@ -152,12 +28,12 @@ const Footer = () => {
                     </a>
                   </li>
                 ))}
-                {item.title === 'Categories' && (
-                  <li key={item.menuItems.length}>
-                    <a href="/categories" aria-label="explore all categories">
-                      See All
-                    </a>
-                  </li>
+                {menuIndex === 0 && (
+                  <div className="flex tablet:justify-center tablet:mt-3 gap-4 justify-start mt-3">
+                    <SocialMediaLink platform="tiktok" />
+                    <SocialMediaLink platform="facebook" />
+                    <SocialMediaLink platform="instagram" />
+                  </div>
                 )}
               </ul>
             </div>
