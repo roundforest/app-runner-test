@@ -2,10 +2,8 @@ import type {ActionFunctionArgs, LoaderFunction, MetaFunction} from '@remix-run/
 import {json, redirect} from '@remix-run/node'
 import {isMobile} from 'react-device-detect'
 import {slugToText, textToSlug} from '@roundforest/text-transforms-commons'
-import type {DropdownSort, LoaderDataProps, ProductsAndMetadataResponse} from '~/models'
+import type {DropdownSort, LoaderDataProps, ProductsAndMetadataResponse} from '~/types'
 import {makeId, userId} from '~/utils/cookies.server'
-import {extractFeatureFlagOverridesFromQueryParams, normalizeFeatureFlags} from '~/utils/launchdarkly/feature-flags'
-import {getLdClient} from '~/utils/launchdarkly/launchdarkly.server'
 import {mapHostHeaderToLocaleParams} from '~/utils/map-locale'
 import {getFakeData, getRealData} from '~/utils/products/products-data.server'
 import {useEffect} from 'react'
@@ -14,9 +12,10 @@ import DesktopFilter from './desktop-filter/desktop-filter'
 import ProductsList from './products-list'
 import ProductsTopbar from './products-topbar'
 import {mapTranslationByLocale} from '~/localization/translation'
-import {calculateMaxDiscount} from '~/utils/products/products-utils'
+import {calculateMaxDiscount, getProductsByFilters, getSortedProducts} from '~/utils/products/products-utils'
 import {FeedbackMain} from './feedback'
 import {ScrollTrigger} from '~/hooks/use-scroll-intent'
+import {getLaunchDarklyFeatureFlags} from '~/utils/launchdarkly/launchdarkly'
 
 export const loader: LoaderFunction = async ({params, request}) => {
   const url = new URL(request.url)
@@ -24,11 +23,15 @@ export const loader: LoaderFunction = async ({params, request}) => {
   const cookieHeader = request.headers.get('Cookie')
   const userIdCookie = await userId.parse(cookieHeader)
   const {searchParams} = url
-  const {searchTerm} = params
+  const {searchTerm: slug = ''} = params
+  const categoryName = slugToText(slug)
+  const featureFlags = await getLaunchDarklyFeatureFlags(request)
   const {locale, language, currencyCode} = mapHostHeaderToLocaleParams(host)
 
   const headers = new Headers()
+
   if (!userIdCookie) headers.append('Set-Cookie', await userId.serialize(makeId()))
+
   const byPriceRange = searchParams.get('byPriceRange')?.split('|') ?? []
   const byPriceRanges = searchParams.get('byPriceRanges')?.split('|') ?? []
   const byPricing = searchParams.get('byPricing')?.split('|') ?? []
@@ -38,45 +41,24 @@ export const loader: LoaderFunction = async ({params, request}) => {
   const byShipping = searchParams.get('byShipping')?.split('|') ?? []
   const sorters = (searchParams.get('sortBy') ?? 'bestMatch') as DropdownSort
 
-  const launchDarkly = await getLdClient()
-
-  launchDarkly.identify({
-    custom: {
-      domain: host,
-      device: isMobile ? 'mobile' : 'desktop',
-    },
-    key: userIdCookie,
-    country: locale,
-  })
-
-  const allFeatureFlags = await launchDarkly?.allFlagsState({key: userIdCookie})
-  const featureFlagsOverrides = extractFeatureFlagOverridesFromQueryParams(Object.fromEntries(searchParams))
-  const overridedFeatureFlags = normalizeFeatureFlags(allFeatureFlags?.allValues(), featureFlagsOverrides)
-
   const data: ProductsAndMetadataResponse =
-    process.env.NODE_ENV === 'production' ? await getRealData(searchTerm || '') : getFakeData()
+    process.env.NODE_ENV === 'production' ? await getRealData(slug, host, locale) : getFakeData()
 
   const itemsPerPage = isMobile ? 8 : 25
-
+  const filters = {byPriceRange, byPriceRanges, byPricing, byStore, byCondition, byBrand, byShipping}
+  const filteredProducts = getSortedProducts(getProductsByFilters(data.products, filters), sorters)
   return json<LoaderDataProps>(
     {
       data,
+      filteredProducts,
       locale,
       language,
-      slug: searchTerm ?? '',
-      categoryName: slugToText(searchTerm ?? ''),
+      slug,
+      categoryName,
       itemsPerPage,
       currencyCode,
-      featureFlags: overridedFeatureFlags,
-      filters: {
-        byPriceRange,
-        byPriceRanges,
-        byPricing,
-        byStore,
-        byCondition,
-        byBrand,
-        byShipping,
-      },
+      featureFlags,
+      filters,
       sorters,
     },
     // {headers},
@@ -88,6 +70,7 @@ export const meta: MetaFunction<typeof loader, {'routes/products.$searchTerm': L
   const maxDiscount = calculateMaxDiscount(productsData.products ?? [])
   const title = mapTranslationByLocale[locale].Page.title(categoryName, maxDiscount ?? 70)
   const description = mapTranslationByLocale[locale].Page.description(categoryName)
+
   return [
     {title},
     {property: 'og:locale', content: locale},
@@ -101,7 +84,7 @@ export const meta: MetaFunction<typeof loader, {'routes/products.$searchTerm': L
 export async function action({request}: ActionFunctionArgs) {
   const body = await request.formData()
   const query = body.get('search-query') as string
-  return redirect(`/products/${textToSlug(query)}`)
+  return redirect(`/${textToSlug(query)}`)
 }
 
 export default function Products() {

@@ -2,11 +2,12 @@ import {useLoaderData, useSearchParams} from '@remix-run/react'
 import React from 'react'
 import FilterRow from './filter-row'
 import PriceRangeSlider from './price-range-slider'
-import type {LoaderDataProps} from '~/models'
+import type {LoaderDataProps} from '~/types'
 import {getBrandFilterValues, getConditionFilterValues, getStoreFilterValues} from '~/utils/products/products-utils'
 import {extractFromUrlSearchParams, toggleUrlSearchParams} from '~/utils/commons'
 import {useTranslation} from '~/localization/translation'
 import {useReportWidgetClickCallback, useReportWidgetSeen} from '~/hooks/analytics-hooks'
+import {textToSlug} from '@roundforest/text-transforms-commons'
 
 const DesktopFilter = () => {
   const {
@@ -105,11 +106,12 @@ const DesktopFilter = () => {
         </div>
         <div className="flex flex-col gap-5">
           <h1 className="text-[15px] text-neutral-500">{translations.FiltersMenuDesktop.FilterTitles.store}</h1>
-          {storeNames.map((store, i) => {
+          {storeNames.map((storeName, i) => {
+            const store = textToSlug(storeName)
             return (
               <React.Fragment key={`${store}-${i}`}>
                 <FilterRow
-                  title={store}
+                  title={storeName}
                   value={store}
                   isChecked={extractFromUrlSearchParams(searchParams, 'byStore').includes(store)}
                   filterBy="byStore"
@@ -163,11 +165,12 @@ const DesktopFilter = () => {
         </div>
         <div className="flex flex-col gap-5">
           <h1 className="text-[15px] text-neutral-500">{translations.FiltersMenuDesktop.FilterTitles.brand}</h1>
-          {brandNames.map((brand, i) => {
+          {brandNames.map((brandName, i) => {
+            const brand = textToSlug(brandName)
             return (
               <React.Fragment key={`${brand}-${i}`}>
                 <FilterRow
-                  title={brand}
+                  title={brandName}
                   value={brand}
                   isChecked={extractFromUrlSearchParams(searchParams, 'byBrand').includes(brand)}
                   filterBy="byBrand"

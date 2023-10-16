@@ -9,7 +9,7 @@ import {BdtIconDiscount} from '~/icons/bdt-icon-discount'
 import {BdtIconSortAsc} from '~/icons/bdt-icon-sort-asc'
 import {BdtIconSortDesc} from '~/icons/bdt-icon-sort-desc'
 import {useTranslation} from '~/localization/translation'
-import type {DropdownSort, LoaderDataProps} from '~/models'
+import type {DropdownSort, LoaderDataProps} from '~/types'
 
 export interface DropdownOption {
   value: DropdownSort
@@ -58,7 +58,7 @@ const SortDropdown = () => {
 
   return (
     <div className="flex flex-row self-end items-center gap-2 tablet:hidden">
-      <p className="text-xs font-light text-[#8e8e8e] desktop:hidden">{translation.PageHeader.sortBy}:</p>
+      <span className="w-12 text-xs font-light text-[#8e8e8e] desktop:hidden">{translation.PageHeader.sortBy}:</span>
       <div className="relative inline-block text-left">
         <div className="w-[210px]">
           <button

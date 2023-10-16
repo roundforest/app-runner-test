@@ -18,9 +18,8 @@ import {GOOGLE_ADS_KEY} from './utils/ga/gtag.client'
 import {getABTests} from './utils/launchdarkly/feature-flags'
 import Appbar from './components/appbar'
 import Footer from './components/footer'
-import type {LoaderDataProps} from './models'
+import type {LoaderDataProps} from './types'
 import {getLaunchDarklyFeatureFlags} from './utils/launchdarkly/launchdarkly'
-import {initAppConfig} from './app-config'
 
 export const links: LinksFunction = () => [
   {rel: 'preload', href: stylesheet, as: 'style'},
@@ -57,8 +56,6 @@ export const loader: LoaderFunction = async ({request}) => {
   const cookieHeader = request.headers.get('Cookie')
   const host = request.headers.get('host') || ''
   const {locale} = mapHostHeaderToLocaleParams(host)
-
-  await initAppConfig()
 
   const userIdCookie = await userId.parse(cookieHeader)
   const sessionIdCookie = await sessionId.parse(cookieHeader)
@@ -108,30 +105,29 @@ export default function App() {
       </head>
       <body>
         <script
-          async
-          dangerouslySetInnerHTML={{
-            __html: `window.__CONFIGURATION__= ${JSON.stringify(windowConfig)};`,
-          }}
+          async={true}
+          key="gtag-init"
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsMeasurementId}`}
         />
-        {process.env.NODE_ENV === 'development' ? null : (
-          <>
-            <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsMeasurementId}`} />
-            <script
-              async
-              id="gtag-init"
-              dangerouslySetInnerHTML={{
-                __html: `
+        <script
+          async={true}
+          id="gtag-config"
+          key="gtag-config"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.__CONFIGURATION__= ${JSON.stringify(windowConfig)};
+
               window.dataLayer = window.dataLayer || [];
               function gtag() { dataLayer.push(arguments); }
               gtag('js', new Date());
-              gtag('config', '${GOOGLE_ADS_KEY}');
-              gtag('config', '${googleAnalyticsMeasurementId}', {'page_load_id': '${pageLoadIdCookie}'});
+              gtag('config', '${process.env.NODE_ENV === 'production' ? GOOGLE_ADS_KEY : '0000'}');
+              gtag('config', '${
+                process.env.NODE_ENV === 'production' ? googleAnalyticsMeasurementId : '0000'
+              }', {'page_load_id': '${pageLoadIdCookie}'});
               gtag('event', 'nonceReady');
             `,
-              }}
-            />
-          </>
-        )}
+          }}
+        />
         <Appbar />
         <Outlet />
         <Footer />

@@ -1,6 +1,6 @@
 import React, {Fragment, useMemo} from 'react'
 import {useLoaderData, useSearchParams} from '@remix-run/react'
-import type {LoaderDataProps} from '~/models'
+import type {LoaderDataProps} from '~/types'
 import {getPriceRangesFilters, getProductsPriceRange} from '~/utils/products/products-utils'
 import FilterPriceRangeRow from './mobile-filter-price-range-row'
 import {extractFromUrlSearchParams, toggleUrlSearchParams} from '~/utils/commons'

@@ -41,7 +41,7 @@ const Appbar = () => {
             className="z-50 mx-auto flex min-w-1/2 justify-center tablet:hidden"
             method="POST"
             reloadDocument
-            action={`products/${searchText}`}
+            action={`/${searchText}`}
             role="search"
             onSubmit={() => {
               sendWidgetClickEvent({
@@ -131,7 +131,7 @@ const Appbar = () => {
         <Form
           ref={mobileSearchRef}
           method="POST"
-          action={`products/${searchText}`}
+          action={`/${searchText}`}
           reloadDocument
           role="search"
           onSubmit={() => {

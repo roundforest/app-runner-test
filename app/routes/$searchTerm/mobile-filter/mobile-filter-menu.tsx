@@ -4,7 +4,7 @@ import {useSearchParams} from '@remix-run/react'
 import MobileFilterMenuRow from './mibile-filter-menu-row'
 import MobileFilterSwitchRow from './mobile-filter-switch-row'
 import {extractFromUrlSearchParams, toggleUrlSearchParams} from '~/utils/commons'
-import type {Filters} from '~/models'
+import type {Filters} from '~/types'
 import {useTranslation} from '~/localization/translation'
 
 interface MobileFilterMenuProps {

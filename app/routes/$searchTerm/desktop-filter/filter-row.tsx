@@ -1,5 +1,5 @@
 import React from 'react'
-import type {Filters} from '~/models'
+import type {Filters} from '~/types'
 
 interface FilterRowProps {
   title: string

@@ -4,7 +4,7 @@ import {useFetcher} from 'react-router-dom'
 import {useReportWidgetClickCallback, useReportWidgetSeen, useSendCustomEvent} from '~/hooks/analytics-hooks'
 import {IconCloseMedium} from '~/icons/bdt-icon-close-medium'
 import {useTranslation} from '~/localization/translation'
-import {type LoaderDataProps} from '~/models'
+import {type LoaderDataProps} from '~/types'
 
 export interface ReviewProps {
   isPositive: boolean

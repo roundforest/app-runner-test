@@ -1,6 +1,6 @@
 import {Buffer} from 'buffer'
 import {buildUrl} from '@roundforest/url-commons'
-import type {Product} from '~/models'
+import type {Product} from '~/types'
 
 function correctProductCodeForReporting(productCode: string): string {
   const productCodeParts = (productCode.includes('_') ? productCode.replaceAll('_', '-') : productCode).split('-')

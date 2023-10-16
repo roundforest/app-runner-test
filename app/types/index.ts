@@ -106,6 +106,7 @@ export type DropdownSort = 'bestMatch' | 'discountDescending' | 'expiringDate' |
 
 export interface LoaderDataProps {
   data: ProductsAndMetadataResponse
+  filteredProducts: Product[]
   featureFlags: Record<string, boolean | string>
   locale: string
   language: string

@@ -12,7 +12,7 @@ import it from './it.js'
 import jp from './jp.js'
 import uk from './uk.js'
 import india from './in.js'
-import type {LoaderDataProps} from '~/models/index.js'
+import type {LoaderDataProps} from '~/types/index.js'
 
 type TranslationByLocale = Record<string, typeof us>
 

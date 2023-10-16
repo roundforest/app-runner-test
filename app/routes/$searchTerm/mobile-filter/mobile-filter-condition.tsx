@@ -1,40 +1,40 @@
 import {useLoaderData, useSearchParams} from '@remix-run/react'
 import React from 'react'
-import type {LoaderDataProps} from '~/models'
-import {getBrandFilterValues} from '~/utils/products/products-utils'
+import type {LoaderDataProps} from '~/types'
+import {getConditionFilterValues} from '~/utils/products/products-utils'
 import FilterRow from '../desktop-filter/filter-row'
 import {extractFromUrlSearchParams, toggleUrlSearchParams} from '~/utils/commons'
 import {useReportWidgetClickCallback} from '~/hooks/analytics-hooks'
 
-const MobileFilterBrand = () => {
+const MobileFilterCondition = () => {
   const {
     data: {products},
   } = useLoaderData<LoaderDataProps>()
-  const brandNames = getBrandFilterValues(products)
+  const conditions = getConditionFilterValues(products)
   const [searchParams, setSearchParams] = useSearchParams()
   const sendWidgetClickEvent = useReportWidgetClickCallback()
 
   return (
     <div className="flex flex-col gap-6">
-      {brandNames.map((brand, i) => {
+      {conditions.map((condition, i) => {
         return (
-          <React.Fragment key={`${brand}-${i}`}>
+          <React.Fragment key={`${condition}-${i}`}>
             <FilterRow
-              title={brand}
-              value={brand}
-              isChecked={extractFromUrlSearchParams(searchParams, 'byBrand').includes(brand)}
-              filterBy="byBrand"
+              title={condition}
+              value={condition}
+              isChecked={extractFromUrlSearchParams(searchParams, 'byCondition').includes(condition)}
+              filterBy="byCondition"
               onSubmit={() => {
                 sendWidgetClickEvent({
                   name: 'filter-mobile',
                   placement: 'top',
-                  triggerType: 'brands',
+                  triggerType: 'conditions',
                   variation: JSON.stringify({
-                    [brand]: !extractFromUrlSearchParams(searchParams, 'byBrand').includes(brand),
+                    [condition]: !extractFromUrlSearchParams(searchParams, 'byCondition').includes(condition),
                   }),
                 })
                 setSearchParams((prev) => {
-                  toggleUrlSearchParams(prev, 'byBrand', brand)
+                  toggleUrlSearchParams(prev, 'byCondition', condition)
                   return prev
                 })
               }}
@@ -46,4 +46,4 @@ const MobileFilterBrand = () => {
   )
 }
 
-export default MobileFilterBrand
+export default MobileFilterCondition

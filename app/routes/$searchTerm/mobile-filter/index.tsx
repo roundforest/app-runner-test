@@ -7,7 +7,7 @@ import MobileFilterStore from './mobile-filter-store'
 import MobileFilterCondition from './mobile-filter-condition'
 import MobileFilterBrand from './mobile-filter-brand'
 import {useLoaderData, useSearchParams} from '@remix-run/react'
-import type {LoaderDataProps} from '~/models'
+import type {LoaderDataProps} from '~/types'
 import {useTranslation} from '~/localization/translation'
 
 export type MobileFilterType = 'priceRange' | 'store' | 'condition' | 'brand'

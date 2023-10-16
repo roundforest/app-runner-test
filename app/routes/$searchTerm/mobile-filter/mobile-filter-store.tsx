@@ -1,10 +1,11 @@
 import {useLoaderData, useSearchParams} from '@remix-run/react'
 import React from 'react'
-import type {LoaderDataProps} from '~/models'
+import type {LoaderDataProps} from '~/types'
 import {getStoreFilterValues} from '~/utils/products/products-utils'
 import FilterRow from '../desktop-filter/filter-row'
 import {extractFromUrlSearchParams, toggleUrlSearchParams} from '~/utils/commons'
 import {useReportWidgetClickCallback} from '~/hooks/analytics-hooks'
+import {textToSlug} from '@roundforest/text-transforms-commons'
 
 const MobileFilterStore = () => {
   const {
@@ -17,11 +18,12 @@ const MobileFilterStore = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      {storeNames.map((store, i) => {
+      {storeNames.map((storeName, i) => {
+        const store = textToSlug(storeName)
         return (
           <React.Fragment key={`${store}-${i}`}>
             <FilterRow
-              title={store}
+              title={storeName}
               value={store}
               isChecked={extractFromUrlSearchParams(searchParams, 'byStore').includes(store)}
               filterBy="byStore"

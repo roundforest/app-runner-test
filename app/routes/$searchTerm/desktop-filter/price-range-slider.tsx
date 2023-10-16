@@ -1,7 +1,7 @@
 import {useLoaderData, useSearchParams} from '@remix-run/react'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useReportWidgetClickCallback} from '~/hooks/analytics-hooks'
-import type {LoaderDataProps} from '~/models'
+import type {LoaderDataProps} from '~/types'
 import {getProductsPriceRange} from '~/utils/products/products-utils'
 
 const PriceRangeSlider = () => {

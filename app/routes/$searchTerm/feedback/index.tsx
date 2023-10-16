@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Rating from './rating'
 import {Review} from './review'
-import type {FeedbackState} from '~/models'
+import type {FeedbackState} from '~/types'
 import {ThankYouPopup} from './thank-you-popup'
 
 export const FeedbackMain = () => {

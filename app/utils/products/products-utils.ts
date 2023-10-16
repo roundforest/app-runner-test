@@ -1,4 +1,5 @@
-import type {DropdownSort, Product, FiltersMapType, FiltersType, PriceRange} from '~/models'
+import {textToSlug} from '@roundforest/text-transforms-commons'
+import type {DropdownSort, Product, FiltersMapType, FiltersType, PriceRange} from '~/types'
 
 const filtersMapType = {
   byPriceRange: (products, filterValues) =>
@@ -17,7 +18,7 @@ const filtersMapType = {
         })
       : products,
   byBrand: (products, filterValues) =>
-    filterValues.length ? products.filter((p) => filterValues.includes(p.brandName || '')) : products,
+    filterValues.length ? products.filter((p) => filterValues.includes(textToSlug(p.brandName || ''))) : products,
 
   byPricing: (products, filterValues) =>
     filterValues.length
@@ -33,7 +34,11 @@ const filtersMapType = {
       : products,
 
   byStore: (products, filterValues) =>
-    filterValues.length ? products.filter((p) => filterValues.includes(p.shop)) : products,
+    filterValues.length
+      ? products.filter((p) => {
+          return filterValues.includes(textToSlug(p.shop))
+        })
+      : products,
   byCondition: (products, filterValues) =>
     filterValues.length ? products.filter((p) => filterValues.includes(p.condition)) : products,
   byShipping: (products, filterValues) =>

@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {useInView, type IntersectionOptions} from 'react-intersection-observer'
 import type {makeClient} from '@roundforest/ga-commons'
-import type {Product} from '../models'
+import type {Product} from '../types'
 import {gaClient} from '~/utils/ga/gtag.client'
 
 export function useReportWidgetSeen(

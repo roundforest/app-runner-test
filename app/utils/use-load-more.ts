@@ -1,4 +1,4 @@
-import {useCallback, useState, useRef} from 'react'
+import {useCallback, useState, useRef, useEffect} from 'react'
 
 import {chunk} from '@roundforest/functional-commons'
 
@@ -29,7 +29,7 @@ export function useLoadMore<Item>({items, itemsPerPage}: UseLoadMoreParams<Item>
     setData((prevData) => [...prevData, ...pages.current[currentPageIndex.current]])
   }, [hasNext, isEmpty])
 
-  const resetItems = useCallback(() => {
+  useEffect(() => {
     let newData: Item[] = []
     pages.current = chunk(items, itemsPerPage)
 
@@ -52,7 +52,6 @@ export function useLoadMore<Item>({items, itemsPerPage}: UseLoadMoreParams<Item>
 
   return {
     data,
-    resetItems,
     hasNext,
     loadMore,
   }

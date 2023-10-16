@@ -1,10 +1,10 @@
 import * as ld from 'launchdarkly-node-server-sdk'
-import {appConfig} from '~/app-config'
+import env from 'env-var'
 
 let ldClient: ld.LDClient | undefined
 
-const launchDarklyApiKeyProd = appConfig['BDT_LAUNCH_DARKLY_API_KEY_PROD'] as string
-const launchDarklyApiKeyTest = appConfig['BDT_LAUNCH_DARKLY_API_KEY_TEST'] as string
+const launchDarklyApiKeyProd = env.get('BDT_LAUNCH_DARKLY_API_KEY_PROD').required().asString()
+const launchDarklyApiKeyTest = env.get('BDT_LAUNCH_DARKLY_API_KEY_TEST').required().asString()
 
 async function initializeLdClient() {
   const client =

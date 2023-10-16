@@ -7,7 +7,12 @@ export const loader: LoaderFunction = async () => {
 }
 
 const Main = () => {
-  return <>home</>
+  return (
+    <div className="h-screen mt-24 text-center">
+      <h1 className="text-5xl">HOME PAGE</h1>
+      <h3 className="text-3xl mt-8">Comming soon...</h3>
+    </div>
+  )
 }
 
 export default Main
