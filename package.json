@@ -1,6 +1,6 @@
 {
   "name": "app-runner-remix",
-  "version": "1.2.15",
+  "version": "1.2.16",
   "sideEffects": false,
   "scripts": {
     "build": "concurrently -r 'npm:build:*'",
