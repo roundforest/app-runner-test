@@ -6,7 +6,7 @@
     "build": "concurrently -r 'npm:build:*'",
     "build:css": "tailwindcss -i ./styles/app.css -o ./app/styles/app.css -m",
     "build:app": "remix build",
-    "test": "concurrently -r 'npm:test:*'",
+    "test": "npm run test:eslint && npm run test:typescript",
     "test:eslint": "eslint --color --max-warnings=0 '**/*.[t|j]s?(x)'",
     "test:typescript": "tsc --noEmit --pretty",
     "postbuild": "npm run docker -- --load",
